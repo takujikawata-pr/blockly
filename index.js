@@ -165,13 +165,26 @@ window.addEventListener('load', function load(event) {
 			})
 		} else {
 			//fs.writeFile('./compilation/arduino/ino/sketch.ino', data, function(err){
-			fs.writeFile('./compilation/arduino/sketch/sketch.ino', data, function(err){	
+
+		let arduino_basepath = '';
+		let arduino_ide_cmd = '';
+		if (process.platform == 'win32') {
+			arduino_basepath = './compilation/arduino';
+			arduino_ide_cmd = 'arduino-cli.exe';
+		} else if (process.platform == 'darwin') {
+			arduino_basepath = path.join(__dirname, '../../compilation/arduino');
+			arduino_ide_cmd = path.join(__dirname, '../../compilation/arduino/arduino-cli');
+		} else {
+			arduino_basepath = "./compilation/arduino";
+			arduino_ide_cmd = 'arduino-cli';
+		}
+		fs.writeFile(`${arduino_basepath}/sketch/sketch.ino`, data, function(err){	
 				
-				if (err) return console.log(err)
-			})
+			if (err) return console.log(err)
+		})
 		
-		    var upload_arg = window.profile[carte].upload_arg
-			var cmd = 'arduino-cli.exe compile --fqbn ' + upload_arg +' sketch/sketch.ino'
+		var upload_arg = window.profile[carte].upload_arg
+		var cmd = `${arduino_ide_cmd} compile --fqbn ` + upload_arg +' sketch/sketch.ino'
 		
 		/*
 		   exec( cmd, {cwd:'./compilation/arduino'}, function(err, stdout, stderr){
@@ -192,7 +205,7 @@ window.addEventListener('load', function load(event) {
 				messageDiv.innerHTML = Blockly.Msg.check + ': OK' + quitDiv
 			}) */
 			
-			exec(cmd , {cwd: './compilation/arduino'} , (error, stdout, stderr) => {
+			exec(cmd , {cwd: arduino_basepath} , (error, stdout, stderr) => {
 			if (error) {
 					
 						messageDiv.style.color = '#ff0000'
