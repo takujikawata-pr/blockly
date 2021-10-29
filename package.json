@@ -62,7 +62,8 @@
    "icon": "build/app.ico"
   },
   "mac": {
-   "category": "public.app-category.graphics-design"
+   "category": "public.app-category.graphics-design",
+   "icon": "build/file.icns"
   },
   "dmg": {
    "contents": [
